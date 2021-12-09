@@ -1,0 +1,30 @@
+{
+  "name": "Mathematica::Serializer",
+  "description": "Serializer of Raku objects and expressions into Mathematica (aka Wolfram Language) expressions.",
+  "version": "0.1.0",
+  "perl": "6.d",
+  "authors": [
+    "Anton Antonov"
+  ],
+  "auth": "github:antononcube",
+  "depends": [],
+  "build-depends": [],
+  "test-depends": [],
+  "provides": {
+    "Mathematica::Serializer": "lib/Mathematica/Serializer.rakumod",
+    "Mathematica::Serializer::Encoder": "lib/Mathematica/Serializer/Encoder.rakumod"
+  },
+  "resources": [],
+  "license": "Artistic-2.0",
+  "tags": [
+    "serializer",
+    "mathematica",
+    "wxf",
+    "wolfram exchange format",
+    "wl",
+    "wolfram language",
+    "wolfram"
+  ],
+  "api": "1",
+  "source-url": "https://github.com/antononcube/Raku-Mathematica-Serializer.git"
+}
