@@ -3,8 +3,10 @@ class Mathematica::Serializer::Encoder is export {
     #--------------------------------------------------------
     #| To WL format
     method to_wl( Any $obj --> Str) {
-        if $obj ~~ Positional {
-            return self.Positional-to-WL($obj)
+        if $obj ~~ Seq {
+            return self.Positional-to-WL($obj.Array)
+        } elsif $obj ~~ Positional {
+            return self.Positional-to-WL([|$obj])
         } elsif $obj ~~ Map {
             return self.Map-to-WL($obj)
         } elsif $obj ~~ Pair {
@@ -20,13 +22,13 @@ class Mathematica::Serializer::Encoder is export {
         } elsif $obj ~~ Str {
             return self.Str-to-WL($obj)
         } else {
-            die "Do not know how to serialize object."
+            die "Do not know how to serialize object of type {$obj.WHAT}."
         }
     }
 
     method Positional-to-WL(@p --> Str) {
         my $res = '';
-        for @p -> $x {
+        for |@p -> $x {
             $res ~= ($res ?? ',' !! '') ~ self.to_wl($x)
         }
         return 'List[' ~ $res ~ ']'
