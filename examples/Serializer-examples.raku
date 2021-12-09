@@ -6,7 +6,7 @@ use lib '.';
 use Mathematica::Serializer;
 use Data::Generators;
 
-say encode-to-wl({ "a" => 23, "karma" => 'interest', "instance" => 1/3});
+say encode-to-wl({ "a" => 23, "karma" => 'interest', "instance" => 1/3}):!encoded-head;
 
 my $df = random-tabular-dataset(3,3);
 
