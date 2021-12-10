@@ -4,7 +4,7 @@ class Mathematica::Serializer::Encoder is export {
     #| To WL format
     method to_wl( Any $obj --> Str) {
         if $obj.isa(Whatever) or $obj.isa(WhateverCode) or $obj.isa(HyperWhatever) {
-            return 'Automatic'
+            return self.Whatever-to-WL()
         } elsif $obj ~~ Seq {
             return self.Positional-to-WL($obj.Array)
         } elsif $obj ~~ Positional {
@@ -25,7 +25,7 @@ class Mathematica::Serializer::Encoder is export {
             return self.Str-to-WL($obj)
         } elsif $obj.isa(Any) {
             # Well _maybe_ it is Nil, hence NULL.
-            return 'NULL'
+            return self.Nil-to-WL()
         } else {
             die "Do not know how to serialize object of type {$obj.WHAT}."
         }
@@ -71,5 +71,13 @@ class Mathematica::Serializer::Encoder is export {
 
     method Rat-to-WL(Rat $r --> Str) {
         return 'Rational['~ $r.nude[0] ~ ',' ~ $r.nude[1] ~ ']'
+    }
+
+    method Whatever-to-WL() {
+        return 'Automatic'
+    }
+
+    method Nil-to-WL() {
+        return 'NULL'
     }
 }
