@@ -4,15 +4,17 @@ class Mathematica::Serializer::Encoder is export {
     #| To WL format
     method to_wl(Any $obj --> Str) {
         given $obj {
+            # Optimization: Pair is often encountered in datasets,
+            # hence, Pair and Str are placed to be first to check.
             when Pair       { self.Pair-to-WL($_) }
-            when Seq        { self.Positional-to-WL($_.Array) }
-            when Positional { self.Positional-to-WL([|$obj]) }
-            when Map        { self.Map-to-WL($obj) }
+            when Str        { self.Str-to-WL($obj) }
             when UInt       { self.UInt-to-WL($obj) }
             when Int        { self.Int-to-WL($obj) }
             when Rat        { self.Rat-to-WL($obj) }
             when Numeric    { self.Numeric-to-WL($obj) }
-            when Str        { self.Str-to-WL($obj) }
+            when Seq        { self.Positional-to-WL($_.Array) }
+            when Positional { self.Positional-to-WL([|$obj]) }
+            when Map        { self.Map-to-WL($obj) }
             when $_.isa(Whatever) or $_.isa(WhateverCode) or $_.isa(HyperWhatever) { self.Whatever-to-WL() }
             when $_.isa(Any) {
                 # Well _maybe_ it is Nil, hence NULL.
