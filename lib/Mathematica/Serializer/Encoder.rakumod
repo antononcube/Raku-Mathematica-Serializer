@@ -2,8 +2,14 @@ class Mathematica::Serializer::Encoder is export {
 
     #--------------------------------------------------------
     #| To WL format
-    method to_wl( Any $obj --> Str) {
-        if $obj.isa(Whatever) or $obj.isa(WhateverCode) or $obj.isa(HyperWhatever) {
+    method to_wl(Any $obj --> Str) {
+        if $obj.isa(Pair) {
+            # Optimization: Pair is often encountered in datasets,
+            # hence it is placed to first to check.
+            return self.Pair-to-WL($obj)
+        } elsif $obj ~~ Pair {
+            return self.Pair-to-WL($obj)
+        } elsif $obj.isa(Whatever) or $obj.isa(WhateverCode) or $obj.isa(HyperWhatever) {
             return self.Whatever-to-WL()
         } elsif $obj ~~ Seq {
             return self.Positional-to-WL($obj.Array)
@@ -11,8 +17,6 @@ class Mathematica::Serializer::Encoder is export {
             return self.Positional-to-WL([|$obj])
         } elsif $obj ~~ Map {
             return self.Map-to-WL($obj)
-        } elsif $obj ~~ Pair {
-            return self.Pair-to-WL($obj)
         } elsif $obj ~~ Int {
             return self.Int-to-WL($obj)
         } elsif $obj ~~ UInt {
@@ -50,7 +54,7 @@ class Mathematica::Serializer::Encoder is export {
     method Pair-to-WL(Pair $p --> Str) {
         my $k = self.to_wl($p.key);
         my $v = self.to_wl($p.value);
-        return 'Rule[' ~ $k ~ ',' ~ $v ~ ']'
+        return "Rule[$k,$v]"
     }
 
     method Int-to-WL(Int $i --> Str) {
