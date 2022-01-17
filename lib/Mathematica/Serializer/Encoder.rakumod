@@ -24,54 +24,13 @@ class Mathematica::Serializer::Encoder is export {
         }
     }
 
-    #--------------------------------------------------------
-    #| To WL format
-    method to_wl_first(Any $obj --> Str) {
-        if $obj.isa(Pair) {
-            # Optimization: Pair is often encountered in datasets,
-            # hence, it is placed to be first to check.
-            return self.Pair-to-WL($obj)
-        } elsif $obj ~~ Pair {
-            return self.Pair-to-WL($obj)
-        } elsif $obj.isa(Whatever) or $obj.isa(WhateverCode) or $obj.isa(HyperWhatever) {
-            return self.Whatever-to-WL()
-        } elsif $obj ~~ Seq {
-            return self.Positional-to-WL($obj.Array)
-        } elsif $obj ~~ Positional {
-            return self.Positional-to-WL([|$obj])
-        } elsif $obj ~~ Map {
-            return self.Map-to-WL($obj)
-        } elsif $obj ~~ Int {
-            return self.Int-to-WL($obj)
-        } elsif $obj ~~ UInt {
-            return self.UInt-to-WL($obj)
-        } elsif $obj ~~ Rat {
-            return self.Rat-to-WL($obj)
-        } elsif $obj ~~ Numeric {
-            return self.Numeric-to-WL($obj)
-        } elsif $obj ~~ Str {
-            return self.Str-to-WL($obj)
-        } elsif $obj.isa(Any) {
-            # Well _maybe_ it is Nil, hence NULL.
-            return self.Nil-to-WL()
-        } else {
-            die "Do not know how to serialize object of type { $obj.WHAT }."
-        }
-    }
-
     method Positional-to-WL(@p --> Str) {
-        my $res = '';
-        for |@p -> $x {
-            $res ~= ($res ?? ',' !! '') ~ self.to_wl($x)
-        }
+        my $res = @p.map({ self.to_wl($_) }).join(',');
         return 'List[' ~ $res ~ ']'
     }
 
     method Map-to-WL(Map $m --> Str) {
-        my $res = '';
-        for $m.pairs -> $p {
-            $res ~= ($res ?? ',' !! '') ~ self.Pair-to-WL($p)
-        }
+        my $res = $m.pairs.map({ self.Pair-to-WL($_) }).join(',');
         return 'Association[' ~ $res ~ ']';
     }
 
