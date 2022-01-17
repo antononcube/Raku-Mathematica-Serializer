@@ -3,9 +3,33 @@ class Mathematica::Serializer::Encoder is export {
     #--------------------------------------------------------
     #| To WL format
     method to_wl(Any $obj --> Str) {
+        given $obj {
+            when Pair       { self.Pair-to-WL($_) }
+            when Seq        { self.Positional-to-WL($_.Array) }
+            when Positional { self.Positional-to-WL([|$obj]) }
+            when Map        { self.Map-to-WL($obj) }
+            when UInt       { self.UInt-to-WL($obj) }
+            when Int        { self.Int-to-WL($obj) }
+            when Rat        { self.Rat-to-WL($obj) }
+            when Numeric    { self.Numeric-to-WL($obj) }
+            when Str        { self.Str-to-WL($obj) }
+            when $_.isa(Whatever) or $_.isa(WhateverCode) or $_.isa(HyperWhatever) { self.Whatever-to-WL() }
+            when $_.isa(Any) {
+                # Well _maybe_ it is Nil, hence NULL.
+                self.Nil-to-WL()
+            }
+            default {
+                die "Do not know how to serialize object of type { $_.WHAT }."
+            }
+        }
+    }
+
+    #--------------------------------------------------------
+    #| To WL format
+    method to_wl_first(Any $obj --> Str) {
         if $obj.isa(Pair) {
             # Optimization: Pair is often encountered in datasets,
-            # hence it is placed to first to check.
+            # hence, it is placed to be first to check.
             return self.Pair-to-WL($obj)
         } elsif $obj ~~ Pair {
             return self.Pair-to-WL($obj)
@@ -31,7 +55,7 @@ class Mathematica::Serializer::Encoder is export {
             # Well _maybe_ it is Nil, hence NULL.
             return self.Nil-to-WL()
         } else {
-            die "Do not know how to serialize object of type {$obj.WHAT}."
+            die "Do not know how to serialize object of type { $obj.WHAT }."
         }
     }
 
@@ -74,7 +98,7 @@ class Mathematica::Serializer::Encoder is export {
     }
 
     method Rat-to-WL(Rat $r --> Str) {
-        return 'Rational['~ $r.nude[0] ~ ',' ~ $r.nude[1] ~ ']'
+        return 'Rational[' ~ $r.nude[0] ~ ',' ~ $r.nude[1] ~ ']'
     }
 
     method Whatever-to-WL() {
