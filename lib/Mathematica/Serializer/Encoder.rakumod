@@ -15,6 +15,8 @@ class Mathematica::Serializer::Encoder is export {
             when Seq        { self.Positional-to-WL($_.Array) }
             when Positional { self.Positional-to-WL([|$obj]) }
             when Map        { self.Map-to-WL($obj) }
+            when DateTime   { self.DateTime-to-WL($obj) }
+            when Date       { self.Date-to-WL($obj) }
             when $_.isa(Whatever) or $_.isa(WhateverCode) or $_.isa(HyperWhatever) { self.Whatever-to-WL() }
             when $_.isa(Any) {
                 # Well _maybe_ it is Nil, hence NULL.
@@ -60,6 +62,16 @@ class Mathematica::Serializer::Encoder is export {
 
     method Rat-to-WL(Rat $r --> Str) {
         return 'Rational[' ~ $r.nude[0] ~ ',' ~ $r.nude[1] ~ ']'
+    }
+
+    method Date-to-WL(Date $d --> Str) {
+        return $d.raku.subst('Date.new(', 'DateObject[{').subst(')', '}]'),
+    }
+
+    method DateTime-to-WL(Date $dt --> Str) {
+        my $res = $dt.raku.subst('DateTime.new(', 'DateObject[{');
+        $res ~~ s/ ',:timezone(' ([ \d | \- ]+) '))' $ / }, TimeZone -> \($0\/3600\) ] /;
+        return $res;
     }
 
     method Whatever-to-WL() {
