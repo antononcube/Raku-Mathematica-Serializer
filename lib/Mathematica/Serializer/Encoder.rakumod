@@ -57,7 +57,7 @@ class Mathematica::Serializer::Encoder is export {
     }
 
     method Str-to-WL(Str $s --> Str) {
-        return '"' ~ $s ~ '"'
+        return '"' ~ $s.subst(:g, '"', '\\"') ~ '"'
     }
 
     method Rat-to-WL(Rat $r --> Str) {
