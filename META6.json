@@ -17,13 +17,16 @@
   "resources": [],
   "license": "Artistic-2.0",
   "tags": [
-    "serializer",
+    "Mathematica",
+    "WL",
+    "encoder",
     "mathematica",
-    "wxf",
-    "wolfram exchange format",
+    "serializer",
     "wl",
+    "wolfram exchange format",
     "wolfram language",
-    "wolfram"
+    "Wolfram",
+    "wxf"
   ],
   "api": "1",
   "source-url": "https://github.com/antononcube/Raku-Mathematica-Serializer.git"
