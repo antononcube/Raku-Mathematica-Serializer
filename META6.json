@@ -1,7 +1,7 @@
 {
   "name": "Mathematica::Serializer",
   "description": "Serializer of Raku objects and expressions into Mathematica (aka Wolfram Language) expressions.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
