@@ -11,26 +11,17 @@ Here we convert an array of pairs into a WL expression.
 use Mathematica::Serializer;
 encode-to-wl([ "a" => 23, "karma" => 'interest', "instance" => 1/3, "ary" => Whatever, "condo" => Nil]):!encoded-head;
 ```
-```
-# List[Rule["a",23],Rule["karma","interest"],Rule["instance",Rational[1,3]],Rule["ary",Automatic],Rule["condo",NULL]]
-```
 
 Here is a list of date-time objects:
 
 ```perl6
 my @dts = (DateTime.new(2022,1,1,2,9,0), DateTime.new(2022,1,1,11,35,0), DateTime.new(2022,1,1,11,36,0)).Seq;
 ```
-```
-# [2022-01-01T02:09:00Z 2022-01-01T11:35:00Z 2022-01-01T11:36:00Z]
-```
 
 Here we convert that list into a Mathematica expression:
 
 ```perl6
 @dts ==> encode-to-wl
-```
-```
-# WLEncoded[List[DateObject[{2022,1,1,2,9,0}],DateObject[{2022,1,1,11,35,0}],DateObject[{2022,1,1,11,36,0}]]]
 ```
 
 -------
