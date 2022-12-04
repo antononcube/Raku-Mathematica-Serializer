@@ -68,9 +68,10 @@ class Mathematica::Serializer::Encoder is export {
         return $d.raku.subst('Date.new(', 'DateObject[{').subst(')', '}]'),
     }
 
-    method DateTime-to-WL(Date $dt --> Str) {
+    method DateTime-to-WL(DateTime $dt --> Str) {
         my $res = $dt.raku.subst('DateTime.new(', 'DateObject[{');
-        $res ~~ s/ ',:timezone(' ([ \d | \- ]+) '))' $ / }, TimeZone -> \($0\/3600\) ] /;
+        $res ~~ s/ ',:timezone(' ([ \d | \- ]+) ')' / }, TimeZone -> \($0\/3600\) ] /;
+        $res ~~ s/ ')' $ /}]/;
         return $res;
     }
 
